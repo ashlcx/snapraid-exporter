@@ -1,0 +1,207 @@
+{
+ "pulse": {
+  "current_at": "2026-09-20T01:35:46",
+  "array": 462,
+  "config": 4,
+  "disks": 6658,
+  "tasks": 10755,
+  "activity": 1861813
+ },
+ "daemon_version": "1.14",
+ "daemon_conf": "/etc/snapraidd.conf",
+ "health": "passed",
+ "engine_version": "14.9",
+ "engine_conf": "/etc/snapraid.conf",
+ "engine_content": "/mnt/disk1/.snapraid.content",
+ "last_command_at": "2026-09-20T01:10:03",
+ "last_command": "sync",
+ "block_size_bytes": 262144,
+ "data_disks_count": 5,
+ "parity_disks_count": 1,
+ "extra_disks_count": 0,
+ "total_space_bytes": 39997130670080,
+ "free_space_bytes": 9947892416512,
+ "annual_failure_rate": 0.28,
+ "failure_probability": 0.25,
+ "files_count": 36475,
+ "blocks_bad": 0,
+ "blocks_rehash": 0,
+ "blocks_unsynced": 1015477,
+ "blocks_unscrubbed": 22523157,
+ "blocks_count": 22523187,
+ "last_sync_at": "2026-09-20T00:04:18",
+ "last_scrub_at": "2026-09-20T00:08:29",
+ "last_diff_at": "2026-09-20T00:04:18",
+ "hold_off": false,
+ "diff_equal": 34409,
+ "diff_added": 876,
+ "diff_removed": 51,
+ "diff_updated": 1190,
+ "diff_moved": 0,
+ "diff_copied": 0,
+ "diff_relocated": 0,
+ "diff_restored": 0,
+ "diffs": [],
+ "fix_recovered": 0,
+ "fix_unrecoverable": 0,
+ "fixes": [],
+ "scrub_history": {
+  "x_axis_low": 3,
+  "x_axis_high": 0,
+  "x_axis_median": 3,
+  "y_axis_low": 0,
+  "y_axis_high": 61,
+  "points": [
+   {
+    "ago": 3,
+    "scrubbed": 0,
+    "new": 61.2
+   },
+   {
+    "ago": 3,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 3,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 3,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 3,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 3,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 3,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 3,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 3,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 3,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 2,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 2,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 2,
+    "scrubbed": 0,
+    "new": 31.8
+   },
+   {
+    "ago": 2,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 2,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 2,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 2,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 2,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 2,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 2,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 1,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 1,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 1,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 1,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 1,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 1,
+    "scrubbed": 0,
+    "new": 6.46
+   },
+   {
+    "ago": 1,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 1,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 1,
+    "scrubbed": 0,
+    "new": 0
+   },
+   {
+    "ago": 0,
+    "scrubbed": 0,
+    "new": 0.529
+   }
+  ]
+ }
+}
