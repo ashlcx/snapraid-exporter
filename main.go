@@ -27,7 +27,10 @@ type state struct {
 	mu     sync.RWMutex
 	smart  smartReport
 	status statusReport
-	res    map[string]cmdResult
+	// Set once a run has parsed successfully, so a failing command never
+	// renders as healthy zeros.
+	haveSmart, haveStatus bool
+	res                   map[string]cmdResult
 }
 
 func run(ctx context.Context, bin, conf, sub string) (string, cmdResult) {
@@ -42,11 +45,13 @@ func run(ctx context.Context, bin, conf, sub string) (string, cmdResult) {
 	cmd.Stdout, cmd.Stderr = &buf, &buf
 	err := cmd.Run()
 	r := cmdResult{ok: err == nil, duration: time.Since(start), at: time.Now()}
+	if err != nil {
+		log.Printf("snapraid %s failed: %v\n%s", sub, err, strings.TrimSpace(buf.String()))
+	}
 	if ee, isExit := err.(*exec.ExitError); isExit {
 		r.exit = ee.ExitCode()
 	} else if err != nil {
 		r.exit = -1
-		log.Printf("snapraid %s: %v", sub, err)
 	}
 	return buf.String(), r
 }
@@ -59,10 +64,10 @@ func (s *state) refresh(bin, conf string, timeout time.Duration) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if smartRes.ok {
-		s.smart = parseSmart(smartOut)
+		s.smart, s.haveSmart = parseSmart(smartOut), true
 	}
 	if statusRes.ok {
-		s.status = parseStatus(statusOut)
+		s.status, s.haveStatus = parseStatus(statusOut), true
 	}
 	s.res["smart"], s.res["status"] = smartRes, statusRes
 	log.Printf("refreshed: smart ok=%v (%s), status ok=%v (%s)", smartRes.ok, smartRes.duration.Round(time.Millisecond), statusRes.ok, statusRes.duration.Round(time.Millisecond))
@@ -118,7 +123,11 @@ func (s *state) render() string {
 		w.gauge("snapraid_exporter_command_duration_seconds", "Duration of the last snapraid invocation.", r.duration.Seconds(), l...)
 		w.gauge("snapraid_exporter_command_last_run_timestamp_seconds", "Unix time of the last snapraid invocation.", float64(r.at.Unix()), l...)
 	}
-	for _, d := range s.smart.Disks {
+	smartDisks := s.smart.Disks
+	if !s.haveSmart {
+		smartDisks = nil
+	}
+	for _, d := range smartDisks {
 		l := []string{"disk", d.Name, "device", d.Device, "serial", d.Serial}
 		if d.HasTemp {
 			w.gauge("snapraid_smart_disk_temperature_celsius", "Disk temperature reported by SMART.", d.TempC, l...)
@@ -136,8 +145,11 @@ func (s *state) render() string {
 			w.gauge("snapraid_smart_disk_size_terabytes", "Disk size in TB.", d.SizeTB, l...)
 		}
 	}
-	if s.smart.HasArrayProb {
+	if s.haveSmart && s.smart.HasArrayProb {
 		w.gauge("snapraid_smart_array_fail_probability", "Estimated probability (0-1) that at least one disk fails within a year.", s.smart.ArrayFailProb)
+	}
+	if !s.haveStatus {
+		return w.sb.String()
 	}
 	st := s.status
 	for _, d := range st.Disks {
@@ -159,7 +171,7 @@ func (s *state) render() string {
 		w.gauge("snapraid_scrub_median_block_age_days", "Median age in days of blocks' last scrub.", st.ScrubMedianDays)
 		w.gauge("snapraid_scrub_newest_block_age_days", "Age in days of the newest block's last scrub.", st.ScrubNewestDays)
 	}
-	if _, ok := s.res["status"]; ok {
+	{
 		w.gauge("snapraid_unscrubbed_ratio", "Fraction (0-1) of the array not yet scrubbed.", st.UnscrubbedPercent/100)
 		w.gauge("snapraid_array_errors", "Errors reported by snapraid status.", st.Errors)
 		w.gauge("snapraid_sync_in_progress", "1 if snapraid reports an interrupted sync.", b2f(st.SyncInProgress))

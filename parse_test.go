@@ -81,7 +81,7 @@ func TestParseStatus(t *testing.T) {
 }
 
 func TestRender(t *testing.T) {
-	s := &state{res: map[string]cmdResult{"smart": {ok: true}, "status": {ok: true}}}
+	s := &state{res: map[string]cmdResult{"smart": {ok: true}, "status": {ok: true}}, haveSmart: true, haveStatus: true}
 	s.smart, s.status = parseSmart(smartFixture), parseStatus(statusFixture)
 	out := s.render()
 	for _, want := range []string{
@@ -93,5 +93,16 @@ func TestRender(t *testing.T) {
 		if !strings.Contains(out, want) {
 			t.Errorf("missing %q in:\n%s", want, out)
 		}
+	}
+}
+
+func TestRenderOmitsStatusWhenNeverParsed(t *testing.T) {
+	s := &state{res: map[string]cmdResult{"status": {ok: false, exit: 1}}}
+	out := s.render()
+	if strings.Contains(out, "snapraid_array_errors") || strings.Contains(out, "snapraid_unscrubbed_ratio") {
+		t.Errorf("failed status must not emit health metrics:\n%s", out)
+	}
+	if !strings.Contains(out, `snapraid_exporter_command_success{command="status"} 0`) {
+		t.Errorf("missing failure metric:\n%s", out)
 	}
 }
