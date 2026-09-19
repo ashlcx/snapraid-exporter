@@ -1,0 +1,15 @@
+[Unit]
+Description=SnapRAID Prometheus Exporter
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# snapraid needs root to read the content files and query SMART.
+User=root
+ExecStart=/usr/local/bin/snapraid-exporter --web.listen-address=0.0.0.0:9634
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
