@@ -36,3 +36,12 @@ snapraid, and `sync`/`scrub` are never run.
 
 Parsers are tested against fixtures written from snapraid's documented output; verify against
 your snapraid version with `curl :9634/metrics`.
+
+## Container image
+
+`ghcr.io/ashlcx/snapraid-exporter` bundles snapraid and smartctl. `main` publishes `:latest` and
+`:sha-<sha>`; pushing a tag `vX.Y.Z` publishes `:X.Y.Z`, `:X.Y` (and `:X` from v1) and creates a
+GitHub release. To run it, mount `/etc/snapraid.conf`, the array's disks at the same paths, and
+pass the disk devices for SMART (`--privileged` or explicit `--device`s).
+
+    git tag v0.1.0 && git push --tags
